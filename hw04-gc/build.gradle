@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+dependencies {
+    implementation 'com.google.guava:guava'
+}
+
+shadowJar {
+    archiveBaseName.set('hw04-gc')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('fat')
+    manifest {
+        attributes 'Main-Class': 'ru.calculator.CalcDemo'
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar
