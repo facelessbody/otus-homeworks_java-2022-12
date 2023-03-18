@@ -11,6 +11,8 @@ package ru.calculator;
 */
 
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
 import java.time.LocalDateTime;
 
 public class CalcDemo {
@@ -34,6 +36,28 @@ public class CalcDemo {
         System.out.println(summator.getSumLastThreeValues());
         System.out.println(summator.getSomeValue());
         System.out.println(summator.getSum());
+
+        printGCStats();
         System.out.println("spend msec:" + delta + ", sec:" + (delta / 1000));
+    }
+
+    public static void printGCStats() {
+        long totalGarbageCollections = 0;
+        long garbageCollectionTime = 0;
+        for(GarbageCollectorMXBean gc :
+                ManagementFactory.getGarbageCollectorMXBeans()) {
+            long count = gc.getCollectionCount();
+            if(count >= 0) {
+                totalGarbageCollections += count;
+            }
+            long time = gc.getCollectionTime();
+            if(time >= 0) {
+                garbageCollectionTime += time;
+            }
+        }
+        System.out.println("Total Garbage Collections: "
+                           + totalGarbageCollections);
+        System.out.println("Total Garbage Collection Time (ms): "
+                           + garbageCollectionTime);
     }
 }
