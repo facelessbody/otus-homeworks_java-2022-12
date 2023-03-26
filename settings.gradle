@@ -1,3 +1,4 @@
 include 'hw01-gradle'
 include 'hw04-gc'
+include 'hw07-patterns'
 include 'hw08-json'
