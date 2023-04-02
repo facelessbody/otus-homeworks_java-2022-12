@@ -11,6 +11,8 @@
 | 4g | 11575 | 18 | 748 ||
 | 8g | 12840 | 15 | 804 ||
 
+Оптимальный размер хипа 800Мб
+
 *after change to primitivies:*
 
 | HeapSize | TotalTime, ms | TotalGarbageCollections | TotalGarbageCollectionsTime ||
