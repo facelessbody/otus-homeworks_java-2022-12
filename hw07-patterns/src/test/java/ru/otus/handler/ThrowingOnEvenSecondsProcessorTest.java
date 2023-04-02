@@ -3,12 +3,9 @@ package ru.otus.handler;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import ru.otus.model.Message;
-import ru.otus.model.ObjectForMessage;
 import ru.otus.processor.ProcessorException;
 import ru.otus.processor.ProcessorThrowWhenSecondIsEven;
 

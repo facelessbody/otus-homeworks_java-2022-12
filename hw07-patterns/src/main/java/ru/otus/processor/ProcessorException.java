@@ -8,6 +8,6 @@ public class ProcessorException extends RuntimeException {
 
     @UtilityClass
     public static class Messages {
-        public static String CANNOT_PROCESS_ON_EVEN_SECONDS = "cannot process messages on even seconds";
+        public static final String CANNOT_PROCESS_ON_EVEN_SECONDS = "cannot process messages on even seconds";
     }
 }

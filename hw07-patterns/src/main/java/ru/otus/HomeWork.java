@@ -2,10 +2,8 @@ package ru.otus;
 
 import java.time.Clock;
 import java.util.List;
-import java.util.Optional;
 
 import ru.otus.handler.ComplexProcessor;
-import ru.otus.listener.ListenerPrinterConsole;
 import ru.otus.listener.homework.HistoryListener;
 import ru.otus.model.Message;
 import ru.otus.model.ObjectForMessage;
@@ -53,9 +51,5 @@ public class HomeWork {
         System.out.println("result:" + result);
 
         complexProcessor.removeListener(historyListener);
-
-        var found = historyListener.findMessageById(1L);
-        var notFound = historyListener.findMessageById(1L);
-
     }
 }
