@@ -25,7 +25,7 @@ public class FileSerializer implements Serializer {
             Files.writeString(Path.of(fileName), json,
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessException(e);
         }
     }
 }

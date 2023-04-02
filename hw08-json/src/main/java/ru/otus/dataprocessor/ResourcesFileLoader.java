@@ -27,7 +27,7 @@ public class ResourcesFileLoader implements Loader {
             var json = Files.readString(Paths.get(resourceUrl.toURI()));
             return new Gson().fromJson(json, MeasurementsList.class);
         } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessException(e);
         }
     }
 
