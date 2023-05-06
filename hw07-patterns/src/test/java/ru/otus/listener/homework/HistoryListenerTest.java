@@ -24,7 +24,7 @@ class HistoryListenerTest {
         field13Data.add(data);
         field13.setData(field13Data);
 
-        var message = Message.builder(id)
+        var message = new Message.Builder(id)
                 .field10("field10")
                 .field13(field13)
                 .build();

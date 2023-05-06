@@ -19,7 +19,7 @@ public class ThrowingOnEvenSecondsProcessorTest {
         var fixedClock = Clock.fixed(Instant.ofEpochSecond(100L), ZoneId.systemDefault());
         var throwingProcessor = new ProcessorThrowWhenSecondIsEven(fixedClock);
 
-        var message = Message.builder(1L).build();
+        var message = new Message.Builder(1L).build();
 
         assertThatThrownBy(() -> throwingProcessor.process(message))
                 .isInstanceOf(ProcessorException.class)
