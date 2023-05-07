@@ -1,4 +1,4 @@
-package ru.otus.crm.dbmigrations;
+package ru.otus.crm.db.migrations;
 
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;

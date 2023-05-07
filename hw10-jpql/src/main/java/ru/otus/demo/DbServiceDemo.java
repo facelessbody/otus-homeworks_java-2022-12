@@ -4,9 +4,10 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.repository.DataTemplateHibernate;
+import ru.otus.core.repository.EntityClassesSupplier;
 import ru.otus.core.repository.HibernateUtils;
 import ru.otus.core.sessionmanager.TransactionManagerHibernate;
-import ru.otus.crm.dbmigrations.MigrationsExecutorFlyway;
+import ru.otus.crm.db.migrations.MigrationsExecutorFlyway;
 import ru.otus.crm.model.Client;
 import ru.otus.crm.service.DbServiceClientImpl;
 
@@ -25,7 +26,8 @@ public class DbServiceDemo {
 
         new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
 
-        var sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class);
+        var entityClassesSupplier = new EntityClassesSupplier();
+        var sessionFactory = HibernateUtils.buildSessionFactory(configuration, entityClassesSupplier.get());
 
         var transactionManager = new TransactionManagerHibernate(sessionFactory);
 ///
