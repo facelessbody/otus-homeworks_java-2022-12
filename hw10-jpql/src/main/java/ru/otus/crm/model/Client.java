@@ -2,6 +2,7 @@ package ru.otus.crm.model;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,30 +45,36 @@ public class Client implements Cloneable {
     private List<Phone> phones;
 
     public Client(String name) {
-        this.id = null;
-        this.name = name;
+        this(null, name);
     }
 
     public Client(Long id, String name) {
-        this.id = id;
-        this.name = name;
+        this(id, name, null, null);
     }
 
     public Client(Long id, String name, Address address, List<Phone> phones) {
         this.id = id;
         this.name = name;
-        this.address = address;
-        this.address.setClient(this);
-        this.phones = phones;
-        this.phones.forEach(phone -> phone.setClient(this));
+        if (address != null) {
+            this.address = address;
+            this.address.setClient(this);
+        }
+        if (phones != null && !phones.isEmpty()) {
+            this.phones = phones;
+            this.phones.forEach(phone -> phone.setClient(this));
+        }
     }
 
     @Override
     public Client clone() {
-        var copiedAddress = new Address(this.address.getId(), this.address.getStreet());
-        var copiedPhones = this.phones.stream()
-                .map(x -> new Phone(x.getId(), x.getNumber()))
-                .toList();
+        var copiedAddress = Optional.ofNullable(this.address)
+                .map(Address::clone)
+                .orElse(null);
+        var copiedPhones = Optional.ofNullable(this.phones)
+                .map(phones -> phones.stream()
+                        .map(Phone::clone)
+                        .toList())
+                .orElse(null);
         return new Client(this.id, this.name, copiedAddress, copiedPhones);
     }
 }

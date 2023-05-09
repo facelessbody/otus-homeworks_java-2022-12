@@ -17,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @Table(name = "phone")
-public class Phone {
+public class Phone implements Cloneable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,5 +29,10 @@ public class Phone {
 
     public Phone(Long id, String number) {
         this(id, number, null);
+    }
+
+    @Override
+    public Phone clone() {
+        return new Phone(id, number, null);
     }
 }
