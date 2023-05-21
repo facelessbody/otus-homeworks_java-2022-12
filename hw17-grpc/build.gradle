@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id "com.google.protobuf" version "0.9.3"
+    id 'idea'
+}
+
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_19
+
+dependencies {
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation "ch.qos.logback:logback-classic"
+
+    // workaround for javax.annotations
+    compileOnly "org.apache.tomcat:annotations-api:6.0.53"
+
+    implementation "com.google.protobuf:protoc"
+    implementation "io.grpc:grpc-netty"
+    implementation "io.grpc:grpc-protobuf"
+    implementation "io.grpc:grpc-stub"
+}
+
+def filesBaseDir = "$projectDir/build/generated"
+def protoSrcDir = "$projectDir/build/generated/proto"
+def grpcSrcDir = "$projectDir/build/generated/grpc"
+
+sourceSets {
+    main {
+        proto {
+            srcDir protoSrcDir
+        }
+        java {
+            srcDir grpcSrcDir
+        }
+    }
+}
+
+idea {
+    module {
+        sourceDirs += file(protoSrcDir)
+        sourceDirs += file(grpcSrcDir)
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc'
+    }
+
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java'
+
+        }
+    }
+
+    generatedFilesBaseDir = filesBaseDir
+    generateProtoTasks {
+        ofSourceSet('main')*.plugins { grpc {} }
+    }
+}
