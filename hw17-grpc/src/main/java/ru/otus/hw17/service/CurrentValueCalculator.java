@@ -15,7 +15,7 @@ public class CurrentValueCalculator {
     private final NumbersCounterGrpc.NumbersCounterStub remote;
 
     public void calculate() {
-        var currentValue = new AtomicInteger(0);
+        var lastReceived = new AtomicInteger(0);
 
         var firstValue = 0;
         var lastValue = 30;
@@ -27,12 +27,14 @@ public class CurrentValueCalculator {
                         .build(),
                 GrpcUtils.streamObserver(v -> {
                     log.info("received {}", v.getValue());
-                    currentValue.addAndGet(v.getValue());
+                    lastReceived.set(v.getValue());
                 })
         );
 
+        int currentValue = 0;
         for (int i = 0; i < 50; ++i) {
-            log.info("currentValue: {}", currentValue.addAndGet(1));
+            currentValue += 1 + lastReceived.getAndSet(0);
+            log.info("currentValue: {}", currentValue);
             try {
                 Thread.sleep(Duration.ofSeconds(1));
             } catch (InterruptedException ignored) {
