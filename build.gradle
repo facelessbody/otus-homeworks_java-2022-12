@@ -17,8 +17,12 @@ allprojects {
             imports {
                 mavenBom "org.springframework.boot:spring-boot-dependencies:3.0.5"
                 mavenBom "org.testcontainers:testcontainers-bom:1.17.6"
-                mavenBom "com.google.protobuf:protobuf-bom:3.21.12"
+                mavenBom "io.grpc:grpc-bom:${Versions.grpc}"
             }
+
+            dependency "com.google.protobuf:protoc:${Versions.protobuf}"
+            dependency "com.google.protobuf:protobuf-java:${Versions.protobuf}"
+
             dependency "com.google.guava:guava:${Versions.guava}"
             dependency("org.glassfish:jakarta.json:${Versions.glassfishJson}")
         }

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ru.otus.hw17.protobuf.generated;
+
+option java_multiple_files = true;
+
+
+message Number {
+  int32 value = 1;
+}
+
+message NumbersRange {
+  int32 firstValue = 1;
+  int32 lastValue = 2;
+}
+
+service NumbersCounter {
+  rpc Count(NumbersRange) returns (stream Number);
+}
