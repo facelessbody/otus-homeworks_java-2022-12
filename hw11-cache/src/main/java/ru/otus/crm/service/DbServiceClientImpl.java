@@ -21,7 +21,7 @@ public class DbServiceClientImpl implements DBServiceClient {
 
     @Override
     public Client saveClient(Client client) {
-        return transactionManager.doInTransaction(session -> {
+        var saved = transactionManager.doInTransaction(session -> {
             var clientCloned = client.clone();
             if (client.getId() == null) {
                 clientDataTemplate.insert(session, clientCloned);
@@ -32,23 +32,33 @@ public class DbServiceClientImpl implements DBServiceClient {
             log.info("updated client: {}", clientCloned);
             return clientCloned;
         });
+        clientCache.put(saved.getId(), saved);
+        return saved;
     }
 
     @Override
     public Optional<Client> getClient(long id) {
-        return transactionManager.doInReadOnlyTransaction(session -> {
+        var cached = clientCache.get(id);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+        var loaded = transactionManager.doInReadOnlyTransaction(session -> {
             var clientOptional = clientDataTemplate.findById(session, id);
             log.info("client: {}", clientOptional);
             return clientOptional;
         });
+        loaded.ifPresent(c -> clientCache.put(c.getId(), c));
+        return loaded;
     }
 
     @Override
     public List<Client> findAll() {
-        return transactionManager.doInReadOnlyTransaction(session -> {
+        var all = transactionManager.doInReadOnlyTransaction(session -> {
             var clientList = clientDataTemplate.findAll(session);
             log.info("clientList:{}", clientList);
             return clientList;
-       });
+        });
+        all.forEach(c->clientCache.put(c.getId(), c));
+        return all;
     }
 }
