@@ -17,11 +17,11 @@ public class DbServiceClientImpl implements DBServiceClient {
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
-    private final HwCache<Long, Client> clientCache;
+    private final HwCache<String, Client> clientCache;
 
     @Override
     public Client saveClient(Client client) {
-        return transactionManager.doInTransaction(session -> {
+        var saved = transactionManager.doInTransaction(session -> {
             var clientCloned = client.clone();
             if (client.getId() == null) {
                 clientDataTemplate.insert(session, clientCloned);
@@ -32,23 +32,35 @@ public class DbServiceClientImpl implements DBServiceClient {
             log.info("updated client: {}", clientCloned);
             return clientCloned;
         });
+        clientCache.put(String.valueOf(saved.getId()), saved);
+        return saved;
     }
 
     @Override
     public Optional<Client> getClient(long id) {
-        return transactionManager.doInReadOnlyTransaction(session -> {
+        var cached = clientCache.get(String.valueOf(id));
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+        var loaded = transactionManager.doInReadOnlyTransaction(session -> {
             var clientOptional = clientDataTemplate.findById(session, id);
             log.info("client: {}", clientOptional);
             return clientOptional;
         });
+        loaded.ifPresent(c -> clientCache.put(String.valueOf(c.getId()), c));
+        return loaded;
     }
 
     @Override
     public List<Client> findAll() {
-        return transactionManager.doInReadOnlyTransaction(session -> {
+        var allClients = transactionManager.doInReadOnlyTransaction(session -> {
             var clientList = clientDataTemplate.findAll(session);
             log.info("clientList:{}", clientList);
             return clientList;
-       });
+        });
+        for (var client : allClients) {
+            clientCache.put(String.valueOf(client.getId()), client);
+        }
+        return allClients;
     }
 }
