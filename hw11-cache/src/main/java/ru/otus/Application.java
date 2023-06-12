@@ -1,10 +1,9 @@
-package ru.otus.demo;
+package ru.otus;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.cfg.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.otus.core.cache.HwCacheImpl;
 import ru.otus.core.cache.HwListener;
 import ru.otus.core.repository.DataTemplateHibernate;
@@ -17,10 +16,9 @@ import ru.otus.crm.model.Client;
 import ru.otus.crm.model.Phone;
 import ru.otus.crm.service.DbServiceClientImpl;
 
-public class DbServiceDemo {
-
-    private static final Logger log = LoggerFactory.getLogger(DbServiceDemo.class);
-    public static final HwListener<Long, Client> LONG_CLIENT_HW_LISTENER = (key, value, action) ->
+@Slf4j
+public class Application {
+    public static final HwListener<String, Client> LONG_CLIENT_HW_LISTENER = (key, value, action) ->
             log.info("key:{}, value:{}, action: {}", key, value, action);
 
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
@@ -42,7 +40,7 @@ public class DbServiceDemo {
 ///
         var clientTemplate = new DataTemplateHibernate<>(Client.class);
 ///
-        var clientCache = new HwCacheImpl<Long, Client>();
+        var clientCache = new HwCacheImpl<String, Client>();
         clientCache.addListener(LONG_CLIENT_HW_LISTENER);
 
         var dbServiceClient = new DbServiceClientImpl(clientTemplate, transactionManager, clientCache);

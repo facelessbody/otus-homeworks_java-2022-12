@@ -17,7 +17,7 @@ public class DbServiceClientImpl implements DBServiceClient {
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
-    private final HwCache<Long, Client> clientCache;
+    private final HwCache<String, Client> clientCache;
 
     @Override
     public Client saveClient(Client client) {
@@ -32,13 +32,13 @@ public class DbServiceClientImpl implements DBServiceClient {
             log.info("updated client: {}", clientCloned);
             return clientCloned;
         });
-        clientCache.put(saved.getId(), saved);
+        clientCache.put(String.valueOf(saved.getId()), saved);
         return saved;
     }
 
     @Override
     public Optional<Client> getClient(long id) {
-        var cached = clientCache.get(id);
+        var cached = clientCache.get(String.valueOf(id));
         if (cached != null) {
             return Optional.of(cached);
         }
@@ -47,18 +47,20 @@ public class DbServiceClientImpl implements DBServiceClient {
             log.info("client: {}", clientOptional);
             return clientOptional;
         });
-        loaded.ifPresent(c -> clientCache.put(c.getId(), c));
+        loaded.ifPresent(c -> clientCache.put(String.valueOf(c.getId()), c));
         return loaded;
     }
 
     @Override
     public List<Client> findAll() {
-        var all = transactionManager.doInReadOnlyTransaction(session -> {
+        var allClients = transactionManager.doInReadOnlyTransaction(session -> {
             var clientList = clientDataTemplate.findAll(session);
             log.info("clientList:{}", clientList);
             return clientList;
         });
-        all.forEach(c->clientCache.put(c.getId(), c));
-        return all;
+        for (var client : allClients) {
+            clientCache.put(String.valueOf(client.getId()), client);
+        }
+        return allClients;
     }
 }
