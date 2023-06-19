@@ -17,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @Table(name = "client_address")
-public class Address implements Cloneable{
+public class Address implements Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -25,6 +25,7 @@ public record ClientDto(Client client) {
                 .map(Address::getStreet)
                 .orElse("");
     }
+
     public String getPhones() {
         return Stream.ofNullable(client.getPhones())
                 .flatMap(Collection::stream)
