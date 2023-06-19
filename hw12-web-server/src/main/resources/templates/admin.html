@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" lang="ru" content="text/http">
+<head>
+    <meta charset="UTF-8">
+    <title>Админка</title>
+</head>
+<body>
+<div class="clients">
+    <form action="clients" method="post">
+        <label>
+            <input name="clientName" placeholder="Имя клиента" required>
+        </label><br/>
+        <label>
+            <input name="clientAddress" placeholder="Адрес">
+        </label><br/>
+        <label>
+            <input name="clientPhones" placeholder="Номера телефонов">
+        </label><br/>
+        <input type="submit" value="Добавить">
+    </form>
+
+    <h4>Список клиентов</h4>
+    <table style="width: 400px">
+        <thead>
+        <tr>
+            <td style="width: 50px">Id</td>
+            <td style="width: 150px">Имя</td>
+            <td style="width: 100px">Адрес</td>
+            <td style="width: 100px">Номера телефонов</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <#list clientsList as client>
+            <tr>
+                <td>${client.id}</td>
+                <td>${client.name}</td>
+                <td>${client.address}</td>
+                <td>${client.phones}</td>
+            </tr>
+        </#list>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
