@@ -1,4 +1,4 @@
-package ru.petrelevich.api;
+package ru.nzhilik.api;
 
 
 import org.springframework.http.MediaType;
@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
-import ru.petrelevich.domain.Message;
-import ru.petrelevich.domain.MessageDto;
+import ru.nzhilik.domain.Message;
+import ru.nzhilik.domain.MessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import ru.petrelevich.service.DataStore;
+import ru.nzhilik.service.DataStore;
 
 @RestController
 public class DataController {

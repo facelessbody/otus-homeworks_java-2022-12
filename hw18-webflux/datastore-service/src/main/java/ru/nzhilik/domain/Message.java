@@ -1,4 +1,4 @@
-package ru.petrelevich.domain;
+package ru.nzhilik.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;

@@ -1,8 +1,8 @@
-package ru.petrelevich.service;
+package ru.nzhilik.service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.petrelevich.domain.Message;
+import ru.nzhilik.domain.Message;
 
 public interface DataStore {
 

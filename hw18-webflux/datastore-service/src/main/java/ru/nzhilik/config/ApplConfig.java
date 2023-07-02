@@ -1,4 +1,4 @@
-package ru.petrelevich.config;
+package ru.nzhilik.config;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
