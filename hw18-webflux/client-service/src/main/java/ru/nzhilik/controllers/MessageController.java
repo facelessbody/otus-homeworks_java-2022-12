@@ -22,6 +22,7 @@ public class MessageController {
     private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
 
     private static final String TOPIC_TEMPLATE = "/topic/response.";
+    private static final long WIRETAPPING_ROOM_ID = 1448L;
 
     private final WebClient datastoreClient;
     private final SimpMessagingTemplate template;
@@ -37,8 +38,13 @@ public class MessageController {
         saveMessage(roomId, message)
                 .subscribe(msgId -> logger.info("message send id:{}", msgId));
 
-        template.convertAndSend(String.format("%s%s", TOPIC_TEMPLATE, roomId),
-                new Message(HtmlUtils.htmlEscape(message.messageStr())));
+        var payload = new Message(HtmlUtils.htmlEscape(message.messageStr()));
+        sendResponse(roomId, payload);
+        sendResponse(String.valueOf(WIRETAPPING_ROOM_ID), payload);
+    }
+
+    private void sendResponse(String roomId, Message message) {
+        template.convertAndSend(String.format("%s%s", TOPIC_TEMPLATE, roomId), message);
     }
 
 
@@ -67,6 +73,9 @@ public class MessageController {
     }
 
     private Mono<Long> saveMessage(String roomId, Message message) {
+        if (Long.parseLong(roomId) == WIRETAPPING_ROOM_ID) {
+            throw new ChatException("writing messages forbidden");
+        }
         return datastoreClient.post().uri(String.format("/msg/%s", roomId))
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(message)
@@ -74,7 +83,8 @@ public class MessageController {
     }
 
     private Flux<Message> getMessagesByRoomId(long roomId) {
-        return datastoreClient.get().uri(String.format("/msg/%s", roomId))
+        var uri = roomId == WIRETAPPING_ROOM_ID ? "/msg" : String.format("/msg/%s", roomId);
+        return datastoreClient.get().uri(uri)
                 .accept(MediaType.APPLICATION_NDJSON)
                 .exchangeToFlux(response -> {
                     if (response.statusCode().equals(HttpStatus.OK)) {
